@@ -5,7 +5,7 @@ import type {
   TicketStatus,
 } from "./types";
 
-const BASE = "/tickets";
+const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:8000";
 
 async function toErrorMessage(res: Response): Promise<string> {
   try {
@@ -25,8 +25,12 @@ async function toErrorMessage(res: Response): Promise<string> {
   return res.statusText || `Request failed (${res.status})`;
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(path, {
+async function request<T>(
+  path: string,
+  init?: RequestInit,
+): Promise<T> {
+  const res = await fetch(`${BACKEND_URL}${path}`, {
+    cache: "no-store",
     ...init,
     headers: {
       "Content-Type": "application/json",
@@ -52,7 +56,7 @@ export interface ListTicketsParams {
   priority?: TicketPriority;
 }
 
-export function listTickets(
+export async function listTickets(
   params: ListTicketsParams = {},
 ): Promise<Paginated<Ticket>> {
   const search = new URLSearchParams();
@@ -60,7 +64,7 @@ export function listTickets(
   search.set("offset", String(params.offset ?? 0));
   if (params.status) search.set("status", params.status);
   if (params.priority) search.set("priority", params.priority);
-  return request<Paginated<Ticket>>(`${BASE}/?${search.toString()}`);
+  return request<Paginated<Ticket>>(`/tickets/?${search.toString()}`);
 }
 
 export interface CreateTicketInput {
@@ -70,18 +74,18 @@ export interface CreateTicketInput {
   priority: TicketPriority;
 }
 
-export function createTicket(input: CreateTicketInput): Promise<Ticket> {
-  return request<Ticket>(`${BASE}/`, {
+export async function createTicket(input: CreateTicketInput): Promise<Ticket> {
+  return request<Ticket>("/tickets/", {
     method: "POST",
     body: JSON.stringify(input),
   });
 }
 
-export function updateTicketStatus(
+export async function updateTicketStatus(
   id: string,
   status: TicketStatus,
 ): Promise<Ticket> {
-  return request<Ticket>(`${BASE}/${id}/`, {
+  return request<Ticket>(`/tickets/${id}/`, {
     method: "PATCH",
     body: JSON.stringify({ status }),
   });
