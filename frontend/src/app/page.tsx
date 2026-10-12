@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Suspense } from "react";
 
+import { CreateTicketForm } from "@/components/create-ticket-form";
 import { TicketList } from "@/components/ticket-list";
 import { listTickets } from "@/lib/api";
 
@@ -22,6 +23,7 @@ export default function Home({
           Track tickets, their priority, and status.
         </p>
       </header>
+      <CreateTicketForm />
       <Suspense fallback={<TicketsSkeleton />}>
         {searchParams.then((params) => {
           const offset = Math.max(0, Number(params.offset ?? 0) || 0);
