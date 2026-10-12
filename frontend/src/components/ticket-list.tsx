@@ -1,4 +1,5 @@
 import { PriorityBadge, StatusBadge } from "@/components/badges";
+import { TicketStatusSelect } from "@/components/ticket-status-select";
 import type { Ticket } from "@/lib/types";
 
 export function TicketList({ tickets }: { tickets: Ticket[] }) {
@@ -31,9 +32,12 @@ export function TicketList({ tickets }: { tickets: Ticket[] }) {
               <StatusBadge status={ticket.status} />
             </div>
           </div>
-          <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
-            Created {new Date(ticket.created_at).toLocaleString()}
-          </p>
+          <div className="mt-2 flex items-center justify-between gap-4">
+            <p className="text-xs text-zinc-400 dark:text-zinc-500">
+              Created {new Date(ticket.created_at).toLocaleString()}
+            </p>
+            <TicketStatusSelect id={ticket.id} status={ticket.status} />
+          </div>
         </li>
       ))}
     </ul>
