@@ -14,3 +14,8 @@ class TicketSerializer(serializers.ModelSerializer):
                   "priority",
                   "created_at"
                   ]
+
+
+class TicketStatsSerializer(serializers.Serializer):
+    status = serializers.CharField()
+    count = serializers.IntegerField()
