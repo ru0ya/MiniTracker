@@ -1,4 +1,5 @@
 from django.db import models
+import uuid
 
 
 class Status(models.TextChoices):
@@ -14,7 +15,7 @@ class Priority(models.TextChoices):
 
 
 class Ticket(models.Model):
-    id = models.UUIDField(primary_key=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=20)
     description = models.CharField(max_length=80)
     status = models.CharField(choices=Status.choices)
