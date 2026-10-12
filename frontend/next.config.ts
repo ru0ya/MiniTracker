@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
+const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:8000";
+
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
@@ -11,6 +12,14 @@ const nextConfig: NextConfig = {
         as: "*.css",
       },
     },
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/tickets/:path*",
+        destination: `${BACKEND_URL}/tickets/:path*`,
+      },
+    ];
   },
 };
 
